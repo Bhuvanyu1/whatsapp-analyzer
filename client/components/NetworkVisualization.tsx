@@ -1,10 +1,29 @@
 import { useState } from "react";
-import { Users, Filter, Search, Maximize, Download, Settings } from "lucide-react";
+import {
+  Users,
+  Filter,
+  Search,
+  Maximize,
+  Download,
+  Settings,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface NetworkNode {
   id: string;
@@ -31,13 +50,62 @@ export default function NetworkVisualization() {
 
   // Mock network data
   const nodes: NetworkNode[] = [
-    { id: "1", name: "You", type: "contact", size: 100, color: "#3b82f6", connections: 15 },
-    { id: "2", name: "Sarah Chen", type: "contact", size: 80, color: "#10b981", connections: 12 },
-    { id: "3", name: "Marcus Rodriguez", type: "contact", size: 75, color: "#8b5cf6", connections: 10 },
-    { id: "4", name: "Dr. Priya Sharma", type: "contact", size: 70, color: "#f59e0b", connections: 8 },
-    { id: "5", name: "Tech Founders", type: "group", size: 90, color: "#ef4444", connections: 25 },
-    { id: "6", name: "AI/ML", type: "skill", size: 60, color: "#06b6d4", connections: 6 },
-    { id: "7", name: "Startup Advice", type: "skill", size: 55, color: "#84cc16", connections: 5 }
+    {
+      id: "1",
+      name: "You",
+      type: "contact",
+      size: 100,
+      color: "#3b82f6",
+      connections: 15,
+    },
+    {
+      id: "2",
+      name: "Sarah Chen",
+      type: "contact",
+      size: 80,
+      color: "#10b981",
+      connections: 12,
+    },
+    {
+      id: "3",
+      name: "Marcus Rodriguez",
+      type: "contact",
+      size: 75,
+      color: "#8b5cf6",
+      connections: 10,
+    },
+    {
+      id: "4",
+      name: "Dr. Priya Sharma",
+      type: "contact",
+      size: 70,
+      color: "#f59e0b",
+      connections: 8,
+    },
+    {
+      id: "5",
+      name: "Tech Founders",
+      type: "group",
+      size: 90,
+      color: "#ef4444",
+      connections: 25,
+    },
+    {
+      id: "6",
+      name: "AI/ML",
+      type: "skill",
+      size: 60,
+      color: "#06b6d4",
+      connections: 6,
+    },
+    {
+      id: "7",
+      name: "Startup Advice",
+      type: "skill",
+      size: 55,
+      color: "#84cc16",
+      connections: 5,
+    },
   ];
 
   const edges: NetworkEdge[] = [
@@ -49,7 +117,7 @@ export default function NetworkVisualization() {
     { from: "4", to: "7", strength: 0.8, type: "expertise" },
     { from: "1", to: "5", strength: 0.6, type: "conversation" },
     { from: "2", to: "5", strength: 0.7, type: "conversation" },
-    { from: "3", to: "5", strength: 0.5, type: "conversation" }
+    { from: "3", to: "5", strength: 0.5, type: "conversation" },
   ];
 
   const networkStats = {
@@ -58,7 +126,7 @@ export default function NetworkVisualization() {
     totalExpertiseAreas: 89,
     averageConnections: 8.4,
     networkDensity: 0.68,
-    strongConnections: 45
+    strongConnections: 45,
   };
 
   return (
@@ -72,7 +140,9 @@ export default function NetworkVisualization() {
                 <Users className="h-5 w-5 mr-2" />
                 Professional Network Visualization
               </CardTitle>
-              <CardDescription>Interactive map of your WhatsApp professional network</CardDescription>
+              <CardDescription>
+                Interactive map of your WhatsApp professional network
+              </CardDescription>
             </div>
             <div className="flex items-center space-x-2">
               <Button variant="outline" size="sm">
@@ -102,7 +172,7 @@ export default function NetworkVisualization() {
                 />
               </div>
             </div>
-            
+
             <Select value={filterBy} onValueChange={setFilterBy}>
               <SelectTrigger className="w-48">
                 <Filter className="h-4 w-4 mr-2" />
@@ -166,15 +236,15 @@ export default function NetworkVisualization() {
               <svg className="w-full h-full absolute inset-0">
                 {/* Edges */}
                 {edges.map((edge, index) => {
-                  const fromNode = nodes.find(n => n.id === edge.from);
-                  const toNode = nodes.find(n => n.id === edge.to);
+                  const fromNode = nodes.find((n) => n.id === edge.from);
+                  const toNode = nodes.find((n) => n.id === edge.to);
                   if (!fromNode || !toNode) return null;
-                  
+
                   const x1 = 150 + Math.cos(parseInt(edge.from) * 0.5) * 100;
                   const y1 = 150 + Math.sin(parseInt(edge.from) * 0.5) * 100;
                   const x2 = 150 + Math.cos(parseInt(edge.to) * 0.8) * 120;
                   const y2 = 150 + Math.sin(parseInt(edge.to) * 0.8) * 120;
-                  
+
                   return (
                     <line
                       key={index}
@@ -188,13 +258,13 @@ export default function NetworkVisualization() {
                     />
                   );
                 })}
-                
+
                 {/* Nodes */}
                 {nodes.map((node, index) => {
                   const x = 150 + Math.cos(index * 0.8) * (80 + index * 10);
                   const y = 150 + Math.sin(index * 0.8) * (80 + index * 10);
                   const radius = node.size / 8;
-                  
+
                   return (
                     <g key={node.id}>
                       <circle
@@ -209,7 +279,7 @@ export default function NetworkVisualization() {
                         y={y + radius + 12}
                         textAnchor="middle"
                         className="text-xs fill-foreground"
-                        style={{ fontSize: '10px' }}
+                        style={{ fontSize: "10px" }}
                       >
                         {node.name}
                       </text>
@@ -217,7 +287,7 @@ export default function NetworkVisualization() {
                   );
                 })}
               </svg>
-              
+
               <div className="absolute bottom-4 right-4 text-xs text-muted-foreground bg-background/80 p-2 rounded">
                 Interactive network visualization
               </div>
@@ -234,32 +304,44 @@ export default function NetworkVisualization() {
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-sm">Total Contacts</span>
-                <span className="font-semibold">{networkStats.totalContacts}</span>
+                <span className="font-semibold">
+                  {networkStats.totalContacts}
+                </span>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <span className="text-sm">Groups</span>
-                <span className="font-semibold">{networkStats.totalGroups}</span>
+                <span className="font-semibold">
+                  {networkStats.totalGroups}
+                </span>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <span className="text-sm">Expertise Areas</span>
-                <span className="font-semibold">{networkStats.totalExpertiseAreas}</span>
+                <span className="font-semibold">
+                  {networkStats.totalExpertiseAreas}
+                </span>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <span className="text-sm">Avg Connections</span>
-                <span className="font-semibold">{networkStats.averageConnections}</span>
+                <span className="font-semibold">
+                  {networkStats.averageConnections}
+                </span>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <span className="text-sm">Network Density</span>
-                <span className="font-semibold">{networkStats.networkDensity}</span>
+                <span className="font-semibold">
+                  {networkStats.networkDensity}
+                </span>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <span className="text-sm">Strong Connections</span>
-                <span className="font-semibold">{networkStats.strongConnections}</span>
+                <span className="font-semibold">
+                  {networkStats.strongConnections}
+                </span>
               </div>
             </div>
           </CardContent>
@@ -270,24 +352,28 @@ export default function NetworkVisualization() {
       <Card>
         <CardHeader>
           <CardTitle>Network Insights</CardTitle>
-          <CardDescription>AI-powered analysis of your professional network</CardDescription>
+          <CardDescription>
+            AI-powered analysis of your professional network
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="p-4 border rounded-lg">
               <h4 className="font-medium mb-2 text-success">Strength</h4>
               <p className="text-sm text-muted-foreground">
-                Strong connections in tech and AI sectors. High expertise diversity.
+                Strong connections in tech and AI sectors. High expertise
+                diversity.
               </p>
             </div>
-            
+
             <div className="p-4 border rounded-lg">
               <h4 className="font-medium mb-2 text-warning">Opportunity</h4>
               <p className="text-sm text-muted-foreground">
-                Consider expanding connections in finance and healthcare domains.
+                Consider expanding connections in finance and healthcare
+                domains.
               </p>
             </div>
-            
+
             <div className="p-4 border rounded-lg">
               <h4 className="font-medium mb-2 text-primary">Recommendation</h4>
               <p className="text-sm text-muted-foreground">

@@ -1,7 +1,22 @@
 import { useState } from "react";
-import { Star, MessageCircle, Calendar, MapPin, Briefcase, TrendingUp, ExternalLink, Phone } from "lucide-react";
+import {
+  Star,
+  MessageCircle,
+  Calendar,
+  MapPin,
+  Briefcase,
+  TrendingUp,
+  ExternalLink,
+  Phone,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
@@ -29,7 +44,11 @@ interface ContactSearchResultsProps {
   isLoading?: boolean;
 }
 
-export default function ContactSearchResults({ query, results, isLoading = false }: ContactSearchResultsProps) {
+export default function ContactSearchResults({
+  query,
+  results,
+  isLoading = false,
+}: ContactSearchResultsProps) {
   const [expandedContact, setExpandedContact] = useState<string | null>(null);
 
   if (isLoading) {
@@ -61,7 +80,8 @@ export default function ContactSearchResults({ query, results, isLoading = false
             <MessageCircle className="h-12 w-12 mx-auto mb-4 opacity-50" />
             <h3 className="font-medium mb-2">No matches found</h3>
             <p className="text-sm">
-              Try adjusting your search or importing more WhatsApp chats to expand your network
+              Try adjusting your search or importing more WhatsApp chats to
+              expand your network
             </p>
           </div>
         </CardContent>
@@ -71,10 +91,14 @@ export default function ContactSearchResults({ query, results, isLoading = false
 
   const getTrustLevelColor = (level: string) => {
     switch (level) {
-      case "high": return "text-success";
-      case "medium": return "text-warning";
-      case "low": return "text-muted-foreground";
-      default: return "text-muted-foreground";
+      case "high":
+        return "text-success";
+      case "medium":
+        return "text-warning";
+      case "low":
+        return "text-muted-foreground";
+      default:
+        return "text-muted-foreground";
     }
   };
 
@@ -85,7 +109,9 @@ export default function ContactSearchResults({ query, results, isLoading = false
           <h2 className="text-xl font-semibold">
             Search Results for: <span className="text-primary">"{query}"</span>
           </h2>
-          <p className="text-muted-foreground">Found {results.length} relevant contacts in your network</p>
+          <p className="text-muted-foreground">
+            Found {results.length} relevant contacts in your network
+          </p>
         </div>
         <div className="flex items-center space-x-2">
           <Button variant="outline" size="sm">
@@ -98,7 +124,10 @@ export default function ContactSearchResults({ query, results, isLoading = false
       </div>
 
       {results.map((contact) => (
-        <Card key={contact.id} className="hover:shadow-medium transition-shadow">
+        <Card
+          key={contact.id}
+          className="hover:shadow-medium transition-shadow"
+        >
           <CardContent className="p-0">
             <div className="p-6">
               {/* Contact Header */}
@@ -107,10 +136,14 @@ export default function ContactSearchResults({ query, results, isLoading = false
                   <Avatar className="h-12 w-12">
                     <AvatarImage src={contact.avatar} alt={contact.name} />
                     <AvatarFallback className="bg-primary text-primary-foreground font-medium">
-                      {contact.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                      {contact.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  
+
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
                       <h3 className="font-semibold text-lg">{contact.name}</h3>
@@ -126,36 +159,45 @@ export default function ContactSearchResults({ query, results, isLoading = false
                           />
                         ))}
                       </div>
-                      <Badge variant="outline" className={getTrustLevelColor(contact.trustLevel)}>
+                      <Badge
+                        variant="outline"
+                        className={getTrustLevelColor(contact.trustLevel)}
+                      >
                         {contact.trustLevel} trust
                       </Badge>
                     </div>
-                    
+
                     {contact.role && contact.company && (
                       <div className="flex items-center text-muted-foreground mb-2">
                         <Briefcase className="h-4 w-4 mr-2" />
-                        <span className="text-sm">{contact.role} at {contact.company}</span>
+                        <span className="text-sm">
+                          {contact.role} at {contact.company}
+                        </span>
                       </div>
                     )}
-                    
+
                     {contact.location && (
                       <div className="flex items-center text-muted-foreground mb-2">
                         <MapPin className="h-4 w-4 mr-2" />
                         <span className="text-sm">{contact.location}</span>
                       </div>
                     )}
-                    
+
                     <div className="flex items-center text-muted-foreground mb-3">
                       <Calendar className="h-4 w-4 mr-2" />
-                      <span className="text-sm">Last contact: {contact.lastContact}</span>
+                      <span className="text-sm">
+                        Last contact: {contact.lastContact}
+                      </span>
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="text-right">
                   <div className="flex items-center space-x-2 mb-2">
                     <TrendingUp className="h-4 w-4 text-primary" />
-                    <span className="font-semibold text-primary">{contact.relevanceScore}% match</span>
+                    <span className="font-semibold text-primary">
+                      {contact.relevanceScore}% match
+                    </span>
                   </div>
                   <Progress value={contact.relevanceScore} className="w-20" />
                 </div>
@@ -178,8 +220,12 @@ export default function ContactSearchResults({ query, results, isLoading = false
               {/* Match Reason */}
               <div className="bg-accent/50 rounded-lg p-3 mb-4">
                 <p className="text-sm">
-                  <span className="font-medium text-accent-foreground">Why this contact matches:</span>{" "}
-                  <span className="text-accent-foreground">{contact.matchReason}</span>
+                  <span className="font-medium text-accent-foreground">
+                    Why this contact matches:
+                  </span>{" "}
+                  <span className="text-accent-foreground">
+                    {contact.matchReason}
+                  </span>
                 </p>
               </div>
 
@@ -188,13 +234,17 @@ export default function ContactSearchResults({ query, results, isLoading = false
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setExpandedContact(
-                    expandedContact === contact.id ? null : contact.id
-                  )}
+                  onClick={() =>
+                    setExpandedContact(
+                      expandedContact === contact.id ? null : contact.id,
+                    )
+                  }
                 >
-                  {expandedContact === contact.id ? "Hide Details" : "View Details"}
+                  {expandedContact === contact.id
+                    ? "Hide Details"
+                    : "View Details"}
                 </Button>
-                
+
                 <div className="flex items-center space-x-2">
                   {contact.phoneNumber && (
                     <Button size="sm" variant="outline">
@@ -221,11 +271,16 @@ export default function ContactSearchResults({ query, results, isLoading = false
                       Conversation Highlights
                     </h4>
                     <div className="space-y-2">
-                      {contact.conversationHighlights.map((highlight, index) => (
-                        <div key={index} className="text-sm p-2 bg-background rounded border-l-2 border-primary">
-                          "{highlight}"
-                        </div>
-                      ))}
+                      {contact.conversationHighlights.map(
+                        (highlight, index) => (
+                          <div
+                            key={index}
+                            className="text-sm p-2 bg-background rounded border-l-2 border-primary"
+                          >
+                            "{highlight}"
+                          </div>
+                        ),
+                      )}
                     </div>
                   </div>
 
@@ -237,7 +292,11 @@ export default function ContactSearchResults({ query, results, isLoading = false
                     </h4>
                     <div className="flex flex-wrap gap-2">
                       {contact.expertise.map((skill, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
+                        <Badge
+                          key={index}
+                          variant="secondary"
+                          className="text-xs"
+                        >
                           {skill}
                         </Badge>
                       ))}
@@ -247,7 +306,8 @@ export default function ContactSearchResults({ query, results, isLoading = false
 
                 <div className="mt-6 pt-4 border-t flex items-center justify-between">
                   <div className="text-sm text-muted-foreground">
-                    Relationship strength: {contact.relationshipStrength}/5 • Trust level: {contact.trustLevel}
+                    Relationship strength: {contact.relationshipStrength}/5 •
+                    Trust level: {contact.trustLevel}
                   </div>
                   <Button variant="link" size="sm">
                     <ExternalLink className="h-4 w-4 mr-2" />
