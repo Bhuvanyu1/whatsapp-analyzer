@@ -1,12 +1,91 @@
 import { useState } from "react";
-import { Search, Upload, Users, MessageSquare, TrendingUp, Brain, Settings, FileText, BarChart3 } from "lucide-react";
+import { Search, Upload, Users, MessageSquare, TrendingUp, Brain, Settings, FileText, BarChart3, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import ContactSearchResults from "@/components/ContactSearchResults";
 
 export default function Index() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [hasSearched, setHasSearched] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+
+  // Mock search results data
+  const mockSearchResults = [
+    {
+      id: "1",
+      name: "Sarah Chen",
+      relevanceScore: 92,
+      expertise: ["AI/ML", "Data Science", "Python", "Startup Consulting"],
+      company: "TechVenture AI",
+      role: "Senior Data Scientist",
+      lastContact: "3 days ago",
+      relationshipStrength: 4,
+      matchReason: "Sarah has extensive experience in AI/ML and has helped multiple startups implement data-driven solutions. She mentioned working on similar challenges in your Tech Founders group.",
+      conversationHighlights: [
+        "Just helped another startup optimize their ML pipeline - reduced costs by 40%",
+        "I've been working with early-stage companies on data strategy for 5+ years",
+        "Happy to review any ML architecture - I've seen most common pitfalls"
+      ],
+      location: "San Francisco, CA",
+      phoneNumber: "+1-555-0123",
+      trustLevel: "high" as const
+    },
+    {
+      id: "2",
+      name: "Marcus Rodriguez",
+      relevanceScore: 87,
+      expertise: ["Venture Capital", "Startup Funding", "Business Strategy", "Network Building"],
+      company: "Horizon Ventures",
+      role: "Partner",
+      lastContact: "1 week ago",
+      relationshipStrength: 3,
+      matchReason: "Marcus is a VC partner who actively invests in early-stage startups. He's mentioned being interested in marketing-focused companies and has a track record of helping founders.",
+      conversationHighlights: [
+        "We're always looking for innovative marketing tech startups",
+        "I can intro you to our marketing expert partners if needed",
+        "Seed funding is definitely available for the right marketing solutions"
+      ],
+      location: "New York, NY",
+      phoneNumber: "+1-555-0456",
+      trustLevel: "high" as const
+    },
+    {
+      id: "3",
+      name: "Dr. Priya Sharma",
+      relevanceScore: 78,
+      expertise: ["Digital Marketing", "Growth Hacking", "Content Strategy", "B2B Marketing"],
+      company: "Growth Labs",
+      role: "Marketing Director",
+      lastContact: "2 weeks ago",
+      relationshipStrength: 5,
+      matchReason: "Priya specializes in digital marketing strategy for startups and has successfully scaled multiple companies from early stage to Series A.",
+      conversationHighlights: [
+        "I've helped 15+ startups define their go-to-market strategy",
+        "Digital marketing is all about finding the right channels for your specific audience",
+        "Always happy to review marketing strategies - it's my passion!"
+      ],
+      location: "Austin, TX",
+      phoneNumber: "+1-555-0789",
+      trustLevel: "high" as const
+    }
+  ];
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+
+    setIsSearching(true);
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsSearching(false);
+    setHasSearched(true);
+  };
+
+  const handleBackToDashboard = () => {
+    setHasSearched(false);
+    setSearchQuery("");
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -58,8 +137,12 @@ export default function Index() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-12 py-6 text-lg border-2 focus:border-primary rounded-xl shadow-soft"
               />
-              <Button className="absolute right-2 top-1/2 transform -translate-y-1/2 px-6 py-3 rounded-lg">
-                Search Network
+              <Button
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 px-6 py-3 rounded-lg"
+                onClick={handleSearch}
+                disabled={!searchQuery.trim() || isSearching}
+              >
+                {isSearching ? "Searching..." : "Search Network"}
               </Button>
             </div>
             
@@ -84,6 +167,23 @@ export default function Index() {
           </div>
         </div>
 
+        {/* Search Results or Dashboard Content */}
+        {hasSearched ? (
+          <div>
+            <div className="mb-6">
+              <Button variant="outline" onClick={handleBackToDashboard} className="mb-4">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Dashboard
+              </Button>
+            </div>
+            <ContactSearchResults
+              query={searchQuery}
+              results={mockSearchResults}
+              isLoading={isSearching}
+            />
+          </div>
+        ) : (
+          <>
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
@@ -245,6 +345,8 @@ export default function Index() {
             </div>
           </CardContent>
         </Card>
+          </>
+        )}
       </main>
     </div>
   );
