@@ -4,7 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Link } from "react-router-dom";
 import ContactSearchResults from "@/components/ContactSearchResults";
+import WhatsAppUpload from "@/components/WhatsAppUpload";
 
 export default function Index() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -105,13 +108,25 @@ export default function Index() {
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <Button variant="outline" size="sm">
-                <Upload className="h-4 w-4 mr-2" />
-                Import Chats
-              </Button>
-              <Button variant="outline" size="sm">
-                <Settings className="h-4 w-4" />
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Upload className="h-4 w-4 mr-2" />
+                    Import Chats
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Import WhatsApp Chats</DialogTitle>
+                  </DialogHeader>
+                  <WhatsAppUpload />
+                </DialogContent>
+              </Dialog>
+              <Link to="/settings">
+                <Button variant="outline" size="sm">
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -295,18 +310,30 @@ export default function Index() {
               <CardDescription>Common tasks and tools</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button variant="outline" className="w-full justify-start" size="sm">
-                <Upload className="h-4 w-4 mr-2" />
-                Import WhatsApp Chats
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="w-full justify-start" size="sm">
+                    <Upload className="h-4 w-4 mr-2" />
+                    Import WhatsApp Chats
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Import WhatsApp Chats</DialogTitle>
+                  </DialogHeader>
+                  <WhatsAppUpload />
+                </DialogContent>
+              </Dialog>
               <Button variant="outline" className="w-full justify-start" size="sm">
                 <Users className="h-4 w-4 mr-2" />
                 Browse All Contacts
               </Button>
-              <Button variant="outline" className="w-full justify-start" size="sm">
-                <BarChart3 className="h-4 w-4 mr-2" />
-                Network Analytics
-              </Button>
+              <Link to="/analytics" className="block">
+                <Button variant="outline" className="w-full justify-start" size="sm">
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  Network Analytics
+                </Button>
+              </Link>
               <Button variant="outline" className="w-full justify-start" size="sm">
                 <FileText className="h-4 w-4 mr-2" />
                 Export Network Data
