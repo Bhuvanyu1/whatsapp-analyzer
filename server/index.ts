@@ -63,21 +63,29 @@ export function createServer() {
   // Legacy demo route
   app.get("/api/demo", handleDemo);
 
-  // WhatsApp import routes
-  app.post("/api/whatsapp/validate", uploadMiddleware, validateFile);
-  app.post("/api/whatsapp/import", uploadMiddleware, importFile);
-  app.get("/api/whatsapp/history", getImportHistory);
-  app.get("/api/whatsapp/export", exportData);
+  // Temporarily disable complex routes to isolate the issue
+  // TODO: Re-enable once path-to-regexp issue is resolved
 
-  // Contact management routes
-  app.get("/api/contacts", getContacts);
-  app.get("/api/contacts/:id", getContact);
-  app.put("/api/contacts/:id", updateContact);
+  // Basic test routes
+  app.get("/api/test", (_req, res) => {
+    res.json({ message: "Server is working", timestamp: new Date().toISOString() });
+  });
 
-  // Search and analytics routes
-  app.post("/api/search", searchNetwork);
-  app.get("/api/analytics", getNetworkAnalytics);
-  app.post("/api/search/:searchId/feedback", recordSearchFeedback);
+  // WhatsApp import routes (disabled)
+  // app.post("/api/whatsapp/validate", uploadMiddleware, validateFile);
+  // app.post("/api/whatsapp/import", uploadMiddleware, importFile);
+  // app.get("/api/whatsapp/history", getImportHistory);
+  // app.get("/api/whatsapp/export", exportData);
+
+  // Contact management routes (disabled)
+  // app.get("/api/contacts", getContacts);
+  // app.get("/api/contacts/:id", getContact);
+  // app.put("/api/contacts/:id", updateContact);
+
+  // Search and analytics routes (disabled)
+  // app.post("/api/search", searchNetwork);
+  // app.get("/api/analytics", getNetworkAnalytics);
+  // app.post("/api/search/:searchId/feedback", recordSearchFeedback);
 
   // Network statistics endpoint (mock data for development)
   app.get("/api/network/stats", (_req, res) => {
