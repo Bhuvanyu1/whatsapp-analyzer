@@ -653,10 +653,4 @@ export const getWhatsappImportService = () => {
   return _whatsappImportService;
 };
 
-// Legacy exports for backward compatibility
-export const contactModel = getContactModel();
-export const groupModel = getGroupModel();
-export const messageModel = getMessageModel();
-export const expertiseModel = getExpertiseModel();
-export const searchQueryModel = getSearchQueryModel();
-export const whatsappImportService = getWhatsappImportService();
+// Note: Use getter functions to avoid immediate instantiation
