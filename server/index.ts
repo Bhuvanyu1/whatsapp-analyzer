@@ -4,24 +4,27 @@ import cors from "cors";
 import { handleDemo } from "./routes/demo.js";
 import { dbManager } from "./database/connection.js";
 
-// Import WhatsApp routes
-import { 
-  validateFile, 
-  importFile, 
-  getImportHistory, 
-  exportData, 
-  uploadMiddleware 
-} from "./routes/whatsapp.js";
+// Temporarily disable route imports to isolate path-to-regexp issue
+// TODO: Re-enable once issue is resolved
 
-// Import contact routes
-import {
-  getContacts,
-  getContact,
-  updateContact,
-  searchNetwork,
-  getNetworkAnalytics,
-  recordSearchFeedback
-} from "./routes/contacts.js";
+// Import WhatsApp routes (disabled)
+// import {
+//   validateFile,
+//   importFile,
+//   getImportHistory,
+//   exportData,
+//   uploadMiddleware
+// } from "./routes/whatsapp.js";
+
+// Import contact routes (disabled)
+// import {
+//   getContacts,
+//   getContact,
+//   updateContact,
+//   searchNetwork,
+//   getNetworkAnalytics,
+//   recordSearchFeedback
+// } from "./routes/contacts.js";
 
 export function createServer() {
   const app = express();
