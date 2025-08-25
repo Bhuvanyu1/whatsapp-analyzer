@@ -102,7 +102,7 @@ export const importFile: RequestHandler = async (req, res) => {
     const parsedChat = WhatsAppParser.parseContent(content, fileName, req.file.size);
 
     // Step 2: Process the import and store in database
-    const importResult = await whatsappImportService.processImport(parsedChat);
+    const importResult = await getWhatsappImportService().processImport(parsedChat);
 
     // Step 3: Run NLP analysis on contacts
     let expertiseCount = 0;
@@ -115,7 +115,7 @@ export const importFile: RequestHandler = async (req, res) => {
         const analysis = NLPProcessor.analyzeContact(userMessages);
         
         // Store expertise in database
-        const contact = contactModel.findByNormalizedName(participant.normalizedName);
+        const contact = getContactModel().findByNormalizedName(participant.normalizedName);
         if (contact && analysis.expertise.length > 0) {
           const expertiseData = analysis.expertise.map(exp => ({
             contact_id: contact.id,
@@ -126,7 +126,7 @@ export const importFile: RequestHandler = async (req, res) => {
             last_mentioned: new Date().toISOString()
           }));
           
-          expertiseModel.bulkInsert(expertiseData);
+          getExpertiseModel().bulkInsert(expertiseData);
           expertiseCount += expertiseData.length;
         }
       }
@@ -172,8 +172,8 @@ export const getImportHistory: RequestHandler = (req, res) => {
   try {
     // This would typically come from a separate imports tracking table
     // For now, we'll return basic stats
-    const contactStats = contactModel.getStats();
-    const messageStats = messageModel.getStats();
+    const contactStats = getContactModel().getStats();
+    const messageStats = getMessageModel().getStats();
 
     res.json({
       success: true,
@@ -208,13 +208,13 @@ export const exportData: RequestHandler = async (req, res) => {
 
     switch (type) {
       case 'contacts':
-        data = contactModel.findAll(1000); // Export up to 1000 contacts
+        data = getContactModel().findAll(1000); // Export up to 1000 contacts
         filename = `contacts_export_${new Date().toISOString().split('T')[0]}.json`;
         contentType = 'application/json';
         break;
       
       case 'expertise':
-        data = expertiseModel.getTopSkills(100);
+        data = getExpertiseModel().getTopSkills(100);
         filename = `expertise_export_${new Date().toISOString().split('T')[0]}.json`;
         contentType = 'application/json';
         break;
