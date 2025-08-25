@@ -316,7 +316,7 @@ export const searchNetwork: RequestHandler = async (req, res) => {
       .slice(0, limit);
 
     // Update search record with results count
-    searchQueryModel.updateFeedback(searchRecord.id, 0, '');
+    getSearchQueryModel().updateFeedback(searchRecord.id, 0, '');
 
     res.json({
       success: true,
@@ -339,12 +339,12 @@ export const searchNetwork: RequestHandler = async (req, res) => {
 // Get network analytics/statistics
 export const getNetworkAnalytics: RequestHandler = async (req, res) => {
   try {
-    const contactStats = contactModel.getStats();
-    const messageStats = messageModel.getStats();
-    const topSkills = expertiseModel.getTopSkills(20);
+    const contactStats = getContactModel().getStats();
+    const messageStats = getMessageModel().getStats();
+    const topSkills = getExpertiseModel().getTopSkills(20);
 
     // Calculate network health metrics
-    const allContacts = contactModel.findAll(1000);
+    const allContacts = getContactModel().findAll(1000);
     const recentlyActive = allContacts.filter(c => {
       const lastContact = new Date(c.last_contact_date);
       const thirtyDaysAgo = new Date();
@@ -411,7 +411,7 @@ export const recordSearchFeedback: RequestHandler = async (req, res) => {
     const { contactId, feedback } = req.body;
 
     if (contactId) {
-      searchQueryModel.updateFeedback(searchId, parseInt(contactId), feedback || 'clicked');
+      getSearchQueryModel().updateFeedback(searchId, parseInt(contactId), feedback || 'clicked');
     }
 
     res.json({
