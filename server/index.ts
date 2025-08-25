@@ -79,18 +79,18 @@ export function createServer() {
   app.get("/api/analytics", getNetworkAnalytics);
   app.post("/api/search/:searchId/feedback", recordSearchFeedback);
 
-  // Network statistics endpoint
+  // Network statistics endpoint (mock data for development)
   app.get("/api/network/stats", (_req, res) => {
     try {
-      const stats = dbManager.getStats();
+      // Return mock data while database is disabled
       res.json({
         success: true,
         data: {
-          totalContacts: stats.contacts?.count || 0,
-          totalMessages: stats.messages?.count || 0,
-          expertiseAreas: stats.expertise?.count || 0,
-          totalGroups: stats.groups?.count || 0,
-          totalKeywords: stats.keywords?.count || 0,
+          totalContacts: 0,
+          totalMessages: 0,
+          expertiseAreas: 0,
+          totalGroups: 0,
+          totalKeywords: 0,
           lastUpdated: new Date().toISOString()
         }
       });
