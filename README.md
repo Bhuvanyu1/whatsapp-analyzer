@@ -7,30 +7,35 @@ A privacy-first desktop application that transforms your WhatsApp conversations 
 ## 🚀 Features
 
 ### 🔍 **Intelligent Network Search**
+
 - Ask natural language questions about professional challenges
 - Get ranked recommendations of contacts who can help
 - Semantic matching powered by local NLP processing
 - Context-aware results based on conversation history
 
 ### 📊 **Professional Network Analytics**
+
 - Interactive network visualization
 - Expertise heatmaps and skill distribution
 - Relationship strength scoring
 - Network health metrics and growth tracking
 
 ### 🔒 **Privacy-First Design**
+
 - **100% Local Processing** - All data stays on your device
 - No external APIs or cloud storage
 - Encrypted local SQLite database
 - Complete offline functionality
 
 ### 📱 **WhatsApp Integration**
+
 - Parse individual and group chat exports (.txt format)
 - Extract contacts, messages, and conversation context
 - Support for multiple languages and date formats
 - Batch processing for large chat histories
 
 ### 🤖 **AI-Powered Insights**
+
 - Automatic expertise detection from conversations
 - Keyword extraction and categorization
 - Sentiment analysis and communication patterns
@@ -39,6 +44,7 @@ A privacy-first desktop application that transforms your WhatsApp conversations 
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **React 18** + **TypeScript** - Modern UI with type safety
 - **Vite** - Lightning-fast development and building
 - **TailwindCSS 3** - Utility-first styling
@@ -47,18 +53,21 @@ A privacy-first desktop application that transforms your WhatsApp conversations 
 - **Lucide React** - Beautiful icons
 
 ### Backend
+
 - **Express 4** - Web application framework
 - **SQLite** + **better-sqlite3** - Local database with full-text search
 - **Multer** - File upload handling
 - **Zod** - Runtime type validation
 
 ### AI/NLP Processing
+
 - **Natural** - Natural language processing toolkit
 - **Compromise** - Natural language understanding
 - **Stopwords** - Text preprocessing
 - Custom semantic matching algorithms
 
 ### Development
+
 - **PNPM** - Fast, disk space efficient package manager
 - **ESM Modules** - Modern JavaScript module system
 - **Vitest** - Unit testing framework
@@ -67,6 +76,7 @@ A privacy-first desktop application that transforms your WhatsApp conversations 
 ## 📦 Installation
 
 ### Prerequisites
+
 - **Node.js 18+**
 - **PNPM** (recommended) or npm
 
@@ -103,6 +113,7 @@ The SQLite database is automatically created and initialized on first run. No ad
 ## 🎯 Usage Guide
 
 ### 1. **Export WhatsApp Chats**
+
 1. Open WhatsApp on your phone
 2. Select a chat (individual or group)
 3. Tap **⋮** (three dots) → **More** → **Export chat**
@@ -110,21 +121,24 @@ The SQLite database is automatically created and initialized on first run. No ad
 5. Save the `.txt` file
 
 ### 2. **Import to Application**
+
 1. Click **"Import Chats"** in the application
 2. Drag & drop or select your `.txt` files
 3. Watch as the app analyzes conversations and extracts insights
 4. Review the processing results
 
 ### 3. **Search Your Network**
+
 1. Type your professional challenge in the search box
-   - *"I need help with digital marketing strategy"*
-   - *"Looking for Python mentorship"*
-   - *"Need advice on startup funding"*
+   - _"I need help with digital marketing strategy"_
+   - _"Looking for Python mentorship"_
+   - _"Need advice on startup funding"_
 2. Get ranked results of relevant contacts
 3. See match explanations and conversation highlights
 4. Contact your network members directly
 
 ### 4. **Explore Analytics**
+
 1. Visit the **Analytics** page for network visualization
 2. Explore expertise distribution and relationship maps
 3. Track network growth and engagement metrics
@@ -184,6 +198,7 @@ PING_MESSAGE="WhatsApp Network Intelligence API"
 ### Database Schema
 
 The application uses SQLite with the following main tables:
+
 - `contacts` - Contact information and metadata
 - `messages` - Parsed chat messages
 - `expertise` - Extracted skills and knowledge areas
@@ -215,12 +230,14 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 ## 📊 Roadmap
 
 ### Version 2.0
+
 - [ ] Integration with other messaging platforms (Telegram, Slack)
 - [ ] LinkedIn profile enrichment
 - [ ] Calendar integration for relationship maintenance
 - [ ] Advanced AI models for better expertise detection
 
 ### Version 3.0
+
 - [ ] Mobile application
 - [ ] Team collaboration features
 - [ ] Network introduction facilitation
@@ -241,12 +258,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🔒 Privacy & Security
 
 ### Data Handling
+
 - **Local-Only Processing**: All data remains on your device
 - **No Telemetry**: No usage data collection
 - **Encrypted Storage**: SQLite database encryption
 - **No External APIs**: Complete offline functionality
 
 ### Security Best Practices
+
 - Regular dependency updates
 - Input validation and sanitization
 - Secure file handling
