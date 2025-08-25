@@ -30,8 +30,10 @@ export function createServer() {
     });
   });
 
-  // Legacy demo route  
-  app.get("/api/demo", handleDemo);
+  // Legacy demo route (disabled for testing)
+  app.get("/api/demo", (_req, res) => {
+    res.json({ message: "Demo endpoint working" });
+  });
 
   // Network statistics endpoint (mock data for development)
   app.get("/api/network/stats", (_req, res) => {
