@@ -615,10 +615,48 @@ export class WhatsAppImportService {
   }
 }
 
-// Export model instances
-export const contactModel = new ContactModel();
-export const groupModel = new GroupModel();
-export const messageModel = new MessageModel();
-export const expertiseModel = new ExpertiseModel();
-export const searchQueryModel = new SearchQueryModel();
-export const whatsappImportService = new WhatsAppImportService();
+// Lazy initialization of model instances
+let _contactModel: ContactModel | null = null;
+let _groupModel: GroupModel | null = null;
+let _messageModel: MessageModel | null = null;
+let _expertiseModel: ExpertiseModel | null = null;
+let _searchQueryModel: SearchQueryModel | null = null;
+let _whatsappImportService: WhatsAppImportService | null = null;
+
+export const getContactModel = () => {
+  if (!_contactModel) _contactModel = new ContactModel();
+  return _contactModel;
+};
+
+export const getGroupModel = () => {
+  if (!_groupModel) _groupModel = new GroupModel();
+  return _groupModel;
+};
+
+export const getMessageModel = () => {
+  if (!_messageModel) _messageModel = new MessageModel();
+  return _messageModel;
+};
+
+export const getExpertiseModel = () => {
+  if (!_expertiseModel) _expertiseModel = new ExpertiseModel();
+  return _expertiseModel;
+};
+
+export const getSearchQueryModel = () => {
+  if (!_searchQueryModel) _searchQueryModel = new SearchQueryModel();
+  return _searchQueryModel;
+};
+
+export const getWhatsappImportService = () => {
+  if (!_whatsappImportService) _whatsappImportService = new WhatsAppImportService();
+  return _whatsappImportService;
+};
+
+// Legacy exports for backward compatibility
+export const contactModel = getContactModel();
+export const groupModel = getGroupModel();
+export const messageModel = getMessageModel();
+export const expertiseModel = getExpertiseModel();
+export const searchQueryModel = getSearchQueryModel();
+export const whatsappImportService = getWhatsappImportService();
