@@ -205,7 +205,7 @@ export const updateContact: RequestHandler = async (req, res) => {
     const contactId = parseInt(req.params.id);
     const updates = ContactUpdateSchema.parse(req.body);
 
-    const contact = contactModel.findById(contactId);
+    const contact = getContactModel().findById(contactId);
     if (!contact) {
       return res.status(404).json({
         success: false,
@@ -213,7 +213,7 @@ export const updateContact: RequestHandler = async (req, res) => {
       });
     }
 
-    const updatedContact = contactModel.update(contactId, updates);
+    const updatedContact = getContactModel().update(contactId, updates);
 
     res.json({
       success: true,
@@ -234,19 +234,19 @@ export const searchNetwork: RequestHandler = async (req, res) => {
     const { query, limit } = SearchSchema.parse(req.body);
 
     // Log the search query
-    const searchRecord = searchQueryModel.create({
+    const searchRecord = getSearchQueryModel().create({
       query_text: query,
       results_count: 0
     });
 
     // Get all contacts with their expertise and recent messages
-    const allContacts = contactModel.findAll(500); // Get more contacts for better matching
+    const allContacts = getContactModel().findAll(500); // Get more contacts for better matching
     const searchResults = [];
 
     for (const contact of allContacts) {
       // Get contact's expertise and messages for analysis
-      const expertise = expertiseModel.findByContact(contact.id);
-      const recentMessages = messageModel.findByContact(contact.id, 20);
+      const expertise = getExpertiseModel().findByContact(contact.id);
+      const recentMessages = getMessageModel().findByContact(contact.id, 20);
       
       if (expertise.length === 0 && recentMessages.length < 5) {
         continue; // Skip contacts without enough data
