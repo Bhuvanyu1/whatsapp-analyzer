@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import { z } from "zod";
-import { contactModel, expertiseModel, messageModel, searchQueryModel } from "../models/index.js";
+import { getContactModel, getExpertiseModel, getMessageModel, getSearchQueryModel } from "../models/index.js";
 import { NLPProcessor } from "../services/nlp-processor.js";
 
 // Validation schemas
