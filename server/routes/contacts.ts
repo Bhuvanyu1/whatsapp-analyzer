@@ -40,15 +40,15 @@ export const getContacts: RequestHandler = async (req, res) => {
 
     let contacts;
     if (query.search) {
-      contacts = contactModel.search(query.search, query.limit);
+      contacts = getContactModel().search(query.search, query.limit);
     } else {
-      contacts = contactModel.findAll(query.limit, offset);
+      contacts = getContactModel().findAll(query.limit, offset);
     }
 
     // Enrich with expertise data
     const enrichedContacts = await Promise.all(
       contacts.map(async (contact) => {
-        const expertise = expertiseModel.findByContact(contact.id);
+        const expertise = getExpertiseModel().findByContact(contact.id);
         const topSkills = expertise
           .sort((a, b) => b.confidence_score - a.confidence_score)
           .slice(0, 5)
@@ -135,7 +135,7 @@ export const getContacts: RequestHandler = async (req, res) => {
 export const getContact: RequestHandler = async (req, res) => {
   try {
     const contactId = parseInt(req.params.id);
-    const contact = contactModel.findById(contactId);
+    const contact = getContactModel().findById(contactId);
 
     if (!contact) {
       return res.status(404).json({
@@ -145,10 +145,10 @@ export const getContact: RequestHandler = async (req, res) => {
     }
 
     // Get expertise
-    const expertise = expertiseModel.findByContact(contactId);
+    const expertise = getExpertiseModel().findByContact(contactId);
     
     // Get recent messages for analysis
-    const recentMessages = messageModel.findByContact(contactId, 50);
+    const recentMessages = getMessageModel().findByContact(contactId, 50);
     
     // Get conversation highlights (most helpful/informative messages)
     const highlights = recentMessages
