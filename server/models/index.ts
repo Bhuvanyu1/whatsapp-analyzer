@@ -1,7 +1,14 @@
-import Database from 'better-sqlite3';
-import { dbManager } from '../database/connection.js';
-import { ParsedChat, ParsedContact, ParsedMessage } from '../services/whatsapp-parser.js';
-import { ContactAnalysis, InferredExpertise } from '../services/nlp-processor.js';
+import Database from "better-sqlite3";
+import { dbManager } from "../database/connection.js";
+import {
+  ParsedChat,
+  ParsedContact,
+  ParsedMessage,
+} from "../services/whatsapp-parser.js";
+import {
+  ContactAnalysis,
+  InferredExpertise,
+} from "../services/nlp-processor.js";
 
 // Type definitions
 export interface Contact {
@@ -13,7 +20,7 @@ export interface Contact {
   last_contact_date: string;
   total_messages: number;
   relationship_strength: number;
-  trust_level: 'low' | 'medium' | 'high';
+  trust_level: "low" | "medium" | "high";
   company?: string;
   role?: string;
   location?: string;
@@ -50,7 +57,7 @@ export interface Expertise {
   contact_id: number;
   skill: string;
   confidence_score: number;
-  source: 'extracted' | 'manual';
+  source: "extracted" | "manual";
   evidence_count: number;
   last_mentioned: string;
   created_at: string;
@@ -81,9 +88,13 @@ export class ContactModel {
   }
 
   // Create or update contact
-  upsert(contactData: Partial<Contact> & { name: string; normalized_name: string }): Contact {
-    const existingContact = this.findByNormalizedName(contactData.normalized_name);
-    
+  upsert(
+    contactData: Partial<Contact> & { name: string; normalized_name: string },
+  ): Contact {
+    const existingContact = this.findByNormalizedName(
+      contactData.normalized_name,
+    );
+
     if (existingContact) {
       return this.update(existingContact.id, contactData);
     } else {
@@ -91,7 +102,9 @@ export class ContactModel {
     }
   }
 
-  create(contactData: Partial<Contact> & { name: string; normalized_name: string }): Contact {
+  create(
+    contactData: Partial<Contact> & { name: string; normalized_name: string },
+  ): Contact {
     const stmt = this.db.prepare(`
       INSERT INTO contacts (
         name, phone_number, normalized_name, first_contact_date, last_contact_date,
@@ -108,12 +121,12 @@ export class ContactModel {
       contactData.last_contact_date || new Date().toISOString(),
       contactData.total_messages || 0,
       contactData.relationship_strength || 1,
-      contactData.trust_level || 'medium',
+      contactData.trust_level || "medium",
       contactData.company || null,
       contactData.role || null,
       contactData.location || null,
       contactData.notes || null,
-      contactData.connection_source || null
+      contactData.connection_source || null,
     );
 
     return this.findById(result.lastInsertRowid as number)!;
@@ -121,21 +134,21 @@ export class ContactModel {
 
   update(id: number, updates: Partial<Contact>): Contact {
     const fields = Object.keys(updates)
-      .filter(key => key !== 'id' && key !== 'created_at')
-      .map(key => `${key} = ?`)
-      .join(', ');
+      .filter((key) => key !== "id" && key !== "created_at")
+      .map((key) => `${key} = ?`)
+      .join(", ");
 
     if (fields) {
       const values = Object.keys(updates)
-        .filter(key => key !== 'id' && key !== 'created_at')
-        .map(key => (updates as any)[key]);
+        .filter((key) => key !== "id" && key !== "created_at")
+        .map((key) => (updates as any)[key]);
 
       const stmt = this.db.prepare(`
         UPDATE contacts 
         SET ${fields}, updated_at = CURRENT_TIMESTAMP 
         WHERE id = ?
       `);
-      
+
       stmt.run(...values, id);
     }
 
@@ -143,12 +156,14 @@ export class ContactModel {
   }
 
   findById(id: number): Contact | null {
-    const stmt = this.db.prepare('SELECT * FROM contacts WHERE id = ?');
+    const stmt = this.db.prepare("SELECT * FROM contacts WHERE id = ?");
     return stmt.get(id) as Contact | null;
   }
 
   findByNormalizedName(normalizedName: string): Contact | null {
-    const stmt = this.db.prepare('SELECT * FROM contacts WHERE normalized_name = ?');
+    const stmt = this.db.prepare(
+      "SELECT * FROM contacts WHERE normalized_name = ?",
+    );
     return stmt.get(normalizedName) as Contact | null;
   }
 
@@ -177,26 +192,42 @@ export class ContactModel {
       ORDER BY c.relationship_strength DESC, c.total_messages DESC
       LIMIT ?
     `);
-    
+
     const searchTerm = `%${query}%`;
-    return stmt.all(searchTerm, searchTerm, searchTerm, searchTerm, limit) as Contact[];
+    return stmt.all(
+      searchTerm,
+      searchTerm,
+      searchTerm,
+      searchTerm,
+      limit,
+    ) as Contact[];
   }
 
   getStats(): { total: number; recentlyActive: number; highTrust: number } {
-    const total = this.db.prepare('SELECT COUNT(*) as count FROM contacts').get() as { count: number };
-    const recentlyActive = this.db.prepare(`
+    const total = this.db
+      .prepare("SELECT COUNT(*) as count FROM contacts")
+      .get() as { count: number };
+    const recentlyActive = this.db
+      .prepare(
+        `
       SELECT COUNT(*) as count FROM contacts 
       WHERE last_contact_date > date('now', '-30 days')
-    `).get() as { count: number };
-    const highTrust = this.db.prepare(`
+    `,
+      )
+      .get() as { count: number };
+    const highTrust = this.db
+      .prepare(
+        `
       SELECT COUNT(*) as count FROM contacts 
       WHERE trust_level = 'high'
-    `).get() as { count: number };
+    `,
+      )
+      .get() as { count: number };
 
     return {
       total: total.count,
       recentlyActive: recentlyActive.count,
-      highTrust: highTrust.count
+      highTrust: highTrust.count,
     };
   }
 
@@ -233,24 +264,26 @@ export class GroupModel {
       groupData.participant_count || 0,
       groupData.total_messages || 0,
       groupData.first_message_date || null,
-      groupData.last_message_date || null
+      groupData.last_message_date || null,
     );
 
     return this.findById(result.lastInsertRowid as number)!;
   }
 
   findById(id: number): Group | null {
-    const stmt = this.db.prepare('SELECT * FROM groups WHERE id = ?');
+    const stmt = this.db.prepare("SELECT * FROM groups WHERE id = ?");
     return stmt.get(id) as Group | null;
   }
 
   findByName(name: string): Group | null {
-    const stmt = this.db.prepare('SELECT * FROM groups WHERE name = ?');
+    const stmt = this.db.prepare("SELECT * FROM groups WHERE name = ?");
     return stmt.get(name) as Group | null;
   }
 
   findAll(): Group[] {
-    const stmt = this.db.prepare('SELECT * FROM groups ORDER BY created_at DESC');
+    const stmt = this.db.prepare(
+      "SELECT * FROM groups ORDER BY created_at DESC",
+    );
     return stmt.all() as Group[];
   }
 }
@@ -262,7 +295,9 @@ export class MessageModel {
     this.db = dbManager.getDatabase();
   }
 
-  create(messageData: Partial<Message> & { content: string; timestamp: string }): Message {
+  create(
+    messageData: Partial<Message> & { content: string; timestamp: string },
+  ): Message {
     const stmt = this.db.prepare(`
       INSERT INTO messages (
         contact_id, group_id, content, timestamp, date_parsed, is_system_message
@@ -275,14 +310,14 @@ export class MessageModel {
       messageData.content,
       messageData.timestamp,
       messageData.date_parsed || new Date().toISOString(),
-      messageData.is_system_message || false
+      messageData.is_system_message || false,
     );
 
     return this.findById(result.lastInsertRowid as number)!;
   }
 
   findById(id: number): Message | null {
-    const stmt = this.db.prepare('SELECT * FROM messages WHERE id = ?');
+    const stmt = this.db.prepare("SELECT * FROM messages WHERE id = ?");
     return stmt.get(id) as Message | null;
   }
 
@@ -307,16 +342,22 @@ export class MessageModel {
   }
 
   getStats(): { total: number; lastWeek: number; avgPerDay: number } {
-    const total = this.db.prepare('SELECT COUNT(*) as count FROM messages').get() as { count: number };
-    const lastWeek = this.db.prepare(`
+    const total = this.db
+      .prepare("SELECT COUNT(*) as count FROM messages")
+      .get() as { count: number };
+    const lastWeek = this.db
+      .prepare(
+        `
       SELECT COUNT(*) as count FROM messages 
       WHERE date_parsed > datetime('now', '-7 days')
-    `).get() as { count: number };
+    `,
+      )
+      .get() as { count: number };
 
     return {
       total: total.count,
       lastWeek: lastWeek.count,
-      avgPerDay: Math.round(lastWeek.count / 7)
+      avgPerDay: Math.round(lastWeek.count / 7),
     };
   }
 
@@ -332,10 +373,10 @@ export class MessageModel {
         stmt.run(
           message.contact_id || null,
           message.group_id || null,
-          message.content || '',
-          message.timestamp || '',
+          message.content || "",
+          message.timestamp || "",
           message.date_parsed || new Date().toISOString(),
-          message.is_system_message || false
+          message.is_system_message || false,
         );
       }
     });
@@ -351,21 +392,29 @@ export class ExpertiseModel {
     this.db = dbManager.getDatabase();
   }
 
-  upsert(expertiseData: Partial<Expertise> & { contact_id: number; skill: string }): Expertise {
-    const existing = this.findByContactAndSkill(expertiseData.contact_id, expertiseData.skill);
-    
+  upsert(
+    expertiseData: Partial<Expertise> & { contact_id: number; skill: string },
+  ): Expertise {
+    const existing = this.findByContactAndSkill(
+      expertiseData.contact_id,
+      expertiseData.skill,
+    );
+
     if (existing) {
       return this.update(existing.id, {
-        confidence_score: expertiseData.confidence_score || existing.confidence_score,
+        confidence_score:
+          expertiseData.confidence_score || existing.confidence_score,
         evidence_count: (existing.evidence_count || 0) + 1,
-        last_mentioned: new Date().toISOString()
+        last_mentioned: new Date().toISOString(),
       });
     } else {
       return this.create(expertiseData);
     }
   }
 
-  create(expertiseData: Partial<Expertise> & { contact_id: number; skill: string }): Expertise {
+  create(
+    expertiseData: Partial<Expertise> & { contact_id: number; skill: string },
+  ): Expertise {
     const stmt = this.db.prepare(`
       INSERT INTO expertise (
         contact_id, skill, confidence_score, source, evidence_count, last_mentioned
@@ -376,9 +425,9 @@ export class ExpertiseModel {
       expertiseData.contact_id,
       expertiseData.skill,
       expertiseData.confidence_score || 0.5,
-      expertiseData.source || 'extracted',
+      expertiseData.source || "extracted",
       expertiseData.evidence_count || 1,
-      expertiseData.last_mentioned || new Date().toISOString()
+      expertiseData.last_mentioned || new Date().toISOString(),
     );
 
     return this.findById(result.lastInsertRowid as number)!;
@@ -386,16 +435,18 @@ export class ExpertiseModel {
 
   update(id: number, updates: Partial<Expertise>): Expertise {
     const fields = Object.keys(updates)
-      .filter(key => key !== 'id' && key !== 'created_at')
-      .map(key => `${key} = ?`)
-      .join(', ');
+      .filter((key) => key !== "id" && key !== "created_at")
+      .map((key) => `${key} = ?`)
+      .join(", ");
 
     if (fields) {
       const values = Object.keys(updates)
-        .filter(key => key !== 'id' && key !== 'created_at')
-        .map(key => (updates as any)[key]);
+        .filter((key) => key !== "id" && key !== "created_at")
+        .map((key) => (updates as any)[key]);
 
-      const stmt = this.db.prepare(`UPDATE expertise SET ${fields} WHERE id = ?`);
+      const stmt = this.db.prepare(
+        `UPDATE expertise SET ${fields} WHERE id = ?`,
+      );
       stmt.run(...values, id);
     }
 
@@ -403,7 +454,7 @@ export class ExpertiseModel {
   }
 
   findById(id: number): Expertise | null {
-    const stmt = this.db.prepare('SELECT * FROM expertise WHERE id = ?');
+    const stmt = this.db.prepare("SELECT * FROM expertise WHERE id = ?");
     return stmt.get(id) as Expertise | null;
   }
 
@@ -432,10 +483,16 @@ export class ExpertiseModel {
       WHERE e.skill LIKE ?
       ORDER BY e.confidence_score DESC
     `);
-    return stmt.all(`%${skill}%`) as (Expertise & { contact_name: string; company?: string; role?: string })[];
+    return stmt.all(`%${skill}%`) as (Expertise & {
+      contact_name: string;
+      company?: string;
+      role?: string;
+    })[];
   }
 
-  getTopSkills(limit: number = 20): Array<{ skill: string; expert_count: number; avg_confidence: number }> {
+  getTopSkills(
+    limit: number = 20,
+  ): Array<{ skill: string; expert_count: number; avg_confidence: number }> {
     const stmt = this.db.prepare(`
       SELECT skill, 
              COUNT(*) as expert_count,
@@ -446,28 +503,42 @@ export class ExpertiseModel {
       ORDER BY expert_count DESC, avg_confidence DESC
       LIMIT ?
     `);
-    return stmt.all(limit) as Array<{ skill: string; expert_count: number; avg_confidence: number }>;
+    return stmt.all(limit) as Array<{
+      skill: string;
+      expert_count: number;
+      avg_confidence: number;
+    }>;
   }
 
-  bulkInsert(expertiseList: Array<Partial<Expertise> & { contact_id: number; skill: string }>): void {
+  bulkInsert(
+    expertiseList: Array<
+      Partial<Expertise> & { contact_id: number; skill: string }
+    >,
+  ): void {
     const stmt = this.db.prepare(`
       INSERT OR REPLACE INTO expertise (
         contact_id, skill, confidence_score, source, evidence_count, last_mentioned
       ) VALUES (?, ?, ?, ?, ?, ?)
     `);
 
-    const insertMany = this.db.transaction((items: Array<Partial<Expertise> & { contact_id: number; skill: string }>) => {
-      for (const item of items) {
-        stmt.run(
-          item.contact_id,
-          item.skill,
-          item.confidence_score || 0.5,
-          item.source || 'extracted',
-          item.evidence_count || 1,
-          item.last_mentioned || new Date().toISOString()
-        );
-      }
-    });
+    const insertMany = this.db.transaction(
+      (
+        items: Array<
+          Partial<Expertise> & { contact_id: number; skill: string }
+        >,
+      ) => {
+        for (const item of items) {
+          stmt.run(
+            item.contact_id,
+            item.skill,
+            item.confidence_score || 0.5,
+            item.source || "extracted",
+            item.evidence_count || 1,
+            item.last_mentioned || new Date().toISOString(),
+          );
+        }
+      },
+    );
 
     insertMany(expertiseList);
   }
@@ -480,7 +551,9 @@ export class SearchQueryModel {
     this.db = dbManager.getDatabase();
   }
 
-  create(queryData: Partial<SearchQuery> & { query_text: string }): SearchQuery {
+  create(
+    queryData: Partial<SearchQuery> & { query_text: string },
+  ): SearchQuery {
     const stmt = this.db.prepare(`
       INSERT INTO search_queries (
         query_text, results_count, clicked_contact_id, feedback
@@ -491,14 +564,14 @@ export class SearchQueryModel {
       queryData.query_text,
       queryData.results_count || 0,
       queryData.clicked_contact_id || null,
-      queryData.feedback || null
+      queryData.feedback || null,
     );
 
     return this.findById(result.lastInsertRowid as number)!;
   }
 
   findById(id: number): SearchQuery | null {
-    const stmt = this.db.prepare('SELECT * FROM search_queries WHERE id = ?');
+    const stmt = this.db.prepare("SELECT * FROM search_queries WHERE id = ?");
     return stmt.get(id) as SearchQuery | null;
   }
 
@@ -555,7 +628,7 @@ export class WhatsAppImportService {
             participant_count: parsedChat.participants.length,
             total_messages: parsedChat.totalMessages,
             first_message_date: parsedChat.dateRange.start.toISOString(),
-            last_message_date: parsedChat.dateRange.end.toISOString()
+            last_message_date: parsedChat.dateRange.end.toISOString(),
           });
           groupId = group.id;
         }
@@ -572,9 +645,10 @@ export class WhatsAppImportService {
           first_contact_date: participant.firstContact.toISOString(),
           last_contact_date: participant.lastContact.toISOString(),
           total_messages: participant.messageCount,
-          connection_source: parsedChat.groupName || parsedChat.metadata.fileName
+          connection_source:
+            parsedChat.groupName || parsedChat.metadata.fileName,
         });
-        
+
         contactMap.set(participant.normalizedName, contact.id);
         contactsProcessed++;
       }
@@ -583,7 +657,13 @@ export class WhatsAppImportService {
       const messagesToInsert: Partial<Message>[] = [];
       for (const message of parsedChat.messages) {
         if (!message.isSystemMessage) {
-          const contactId = contactMap.get(message.sender.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, ' ').trim());
+          const contactId = contactMap.get(
+            message.sender
+              .toLowerCase()
+              .replace(/[^\w\s]/g, "")
+              .replace(/\s+/g, " ")
+              .trim(),
+          );
           if (contactId) {
             messagesToInsert.push({
               contact_id: contactId,
@@ -591,7 +671,7 @@ export class WhatsAppImportService {
               content: message.content,
               timestamp: message.timestamp,
               date_parsed: message.dateTime.toISOString(),
-              is_system_message: false
+              is_system_message: false,
             });
           }
         }
@@ -609,7 +689,7 @@ export class WhatsAppImportService {
         contactsProcessed,
         messagesProcessed: messagesToInsert.length,
         expertiseExtracted,
-        groupId
+        groupId,
       };
     });
   }
@@ -649,7 +729,8 @@ export const getSearchQueryModel = () => {
 };
 
 export const getWhatsappImportService = () => {
-  if (!_whatsappImportService) _whatsappImportService = new WhatsAppImportService();
+  if (!_whatsappImportService)
+    _whatsappImportService = new WhatsAppImportService();
   return _whatsappImportService;
 };
 

@@ -8,12 +8,12 @@ export function createServer() {
 
   // Initialize database connection (disabled for development)
   // TODO: Re-enable once better-sqlite3 native bindings are fixed
-  console.log('⚠️ Database temporarily disabled for development');
+  console.log("⚠️ Database temporarily disabled for development");
 
   // Middleware
   app.use(cors());
-  app.use(express.json({ limit: '50mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+  app.use(express.json({ limit: "50mb" }));
+  app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
   // Health check endpoints
   app.get("/api/ping", (_req, res) => {
@@ -23,10 +23,10 @@ export function createServer() {
 
   // Basic test endpoint
   app.get("/api/test", (_req, res) => {
-    res.json({ 
-      message: "Server is working", 
+    res.json({
+      message: "Server is working",
       timestamp: new Date().toISOString(),
-      status: "ok"
+      status: "ok",
     });
   });
 
@@ -46,14 +46,14 @@ export function createServer() {
           expertiseAreas: 0,
           totalGroups: 0,
           totalKeywords: 0,
-          lastUpdated: new Date().toISOString()
-        }
+          lastUpdated: new Date().toISOString(),
+        },
       });
     } catch (error) {
-      console.error('Network stats error:', error);
+      console.error("Network stats error:", error);
       res.status(500).json({
         success: false,
-        error: 'Failed to retrieve network statistics'
+        error: "Failed to retrieve network statistics",
       });
     }
   });
@@ -66,26 +66,33 @@ export function createServer() {
         query: "test",
         results: [],
         totalFound: 0,
-        searchId: 1
-      }
+        searchId: 1,
+      },
     });
   });
 
   // Basic error handling
-  app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.error('Server error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Internal server error'
-    });
-  });
+  app.use(
+    (
+      error: any,
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction,
+    ) => {
+      console.error("Server error:", error);
+      res.status(500).json({
+        success: false,
+        error: "Internal server error",
+      });
+    },
+  );
 
   // 404 handler for API routes
-  app.use('/api/*', (req, res) => {
+  app.use("/api/*", (req, res) => {
     res.status(404).json({
       success: false,
-      error: 'API endpoint not found',
-      path: req.path
+      error: "API endpoint not found",
+      path: req.path,
     });
   });
 
