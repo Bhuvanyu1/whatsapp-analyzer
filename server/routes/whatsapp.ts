@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import multer from "multer";
 import { WhatsAppParser } from "../services/whatsapp-parser.js";
 import { NLPProcessor } from "../services/nlp-processor.js";
-import { whatsappImportService, contactModel, messageModel, expertiseModel } from "../models/index.js";
+import { getWhatsappImportService, getContactModel, getMessageModel, getExpertiseModel } from "../models/index.js";
 import { z } from "zod";
 
 // Setup multer for file uploads
