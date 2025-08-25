@@ -1,7 +1,9 @@
 import * as natural from 'natural';
 import nlp from 'compromise';
-import { removeStopwords, eng } from 'stopwords';
+import stopwords from 'stopwords';
 import { ParsedMessage } from './whatsapp-parser.js';
+
+const { removeStopwords, eng } = stopwords;
 
 export interface ExtractedKeyword {
   keyword: string;
