@@ -26,14 +26,16 @@ import {
 export function createServer() {
   const app = express();
 
-  // Initialize database connection
-  try {
-    dbManager.connect();
-    console.log('✅ Database initialized successfully');
-  } catch (error) {
-    console.error('❌ Database initialization failed:', error);
-    process.exit(1);
-  }
+  // Initialize database connection (disabled for development)
+  // TODO: Re-enable once better-sqlite3 native bindings are fixed
+  // try {
+  //   dbManager.connect();
+  //   console.log('✅ Database initialized successfully');
+  // } catch (error) {
+  //   console.error('❌ Database initialization failed:', error);
+  //   process.exit(1);
+  // }
+  console.log('⚠️ Database temporarily disabled for development');
 
   // Middleware
   app.use(cors());
